@@ -1,5 +1,6 @@
-// Mismo origen: nginx en Cloud Run reenvía /reserva al backend en AWS
-const API_URL = "https://git-practica-cloud-aws-194727093142.us-west1.run.app";
+// ✅ Corregido: Al dejarlo vacío, usa el mismo origen (mismo dominio de Cloud Run)
+// Esto garantiza que la petición pase por el proxy de Nginx sí o sí.
+const API_URL = ""; 
 
 async function enviarReserva() {
   const nombre   = document.getElementById("nombre").value.trim();
@@ -22,6 +23,7 @@ async function enviarReserva() {
   msg.className = "msg";
 
   try {
+    // Hará el fetch a "/reserva", lo cual Nginx interceptará de inmediato
     const response = await fetch(`${API_URL}/reserva`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
