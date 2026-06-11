@@ -1,10 +1,19 @@
 steps:
+  # 1. Build de la imagen del frontend apuntando a su ruta correcta
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-west1-docker.pkg.dev/project-c37db799-6063-4bcf-835/restaurante/frontend:$COMMIT_SHA', './frontend']
+    args: [
+      'build', 
+      '--no-cache', 
+      '-t', 'us-west1-docker.pkg.dev/project-c37db799-6063-4bcf-835/restaurante/frontend:$COMMIT_SHA', 
+      '-f', 'frontend/Dockerfile', 
+      './frontend'                 
+    ]
 
+  # 2. Push de la imagen a Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'us-west1-docker.pkg.dev/project-c37db799-6063-4bcf-835/restaurante/frontend:$COMMIT_SHA']
 
+  # 3. Despliegue en Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
