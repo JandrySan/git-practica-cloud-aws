@@ -1,6 +1,5 @@
-// ⚠️ IMPORTANTE: Cuando tengas la URL de AWS, reemplaza este valor
-// Por ahora apunta al backend local para pruebas
-const API_URL = "http://Restaurante-v2-env.eba-yimwd639.us-east-2.elasticbeanstalk.com";
+// Mismo origen: nginx en Cloud Run reenvía /reserva al backend en AWS
+const API_URL = "https://git-practica-cloud-aws-194727093142.us-west1.run.app";
 
 async function enviarReserva() {
   const nombre   = document.getElementById("nombre").value.trim();

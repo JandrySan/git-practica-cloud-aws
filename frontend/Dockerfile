@@ -1,16 +1,9 @@
-# Usamos una imagen ultra ligera de Node.js
-FROM node:alpine
+FROM nginx:alpine
 
-# Instalamos un servidor web estático global rápido
-RUN npm install -g http-server
+COPY index.html styles.css Restaurante.jpeg app.js /usr/share/nginx/html/
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Creamos y nos movemos a la carpeta de la app
-WORKDIR /app
+EXPOSE 8080
 
-# Copiamos tus 3 archivos (index, styles y el propio Dockerfile)
-COPY index.html .
-COPY styles.css .
-COPY Restaurante.jpeg .
-COPY app.js .
-# Cloud Run le pasa el $PORT, y este comando lo lee de forma nativa e inmediata
-CMD ["sh", "-c", "http-server . -p ${PORT:-8080}"]
+CMD ["nginx", "-g", "daemon off;"]
+

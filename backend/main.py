@@ -13,7 +13,10 @@ app = FastAPI(
 # ✅ CORS: permite que el frontend en Cloud Run llame al backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://git-practica-cloud-aws-194727093142.us-west1.run.app/"],  # Cuando tengas la URL de Cloud Run, ponla aquí
+    allow_origins=[
+        "https://git-practica-cloud-aws-194727093142.us-west1.run.app",
+        "http://Restaurante-v2-env.eba-yimwd639.us-east-2.elasticbeanstalk.com",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
