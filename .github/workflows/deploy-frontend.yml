@@ -1,0 +1,51 @@
+name: Deploy Frontend a Google Cloud Run
+
+# Se ejecuta cada vez que haces push a main en la carpeta frontend
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+
+env:
+  PROJECT_ID: TU_PROJECT_ID         # ← reemplaza con tu ID de proyecto GCP
+  SERVICE_NAME: restaurante-frontend # ← nombre del servicio en Cloud Run
+  REGION: us-central1                # ← región de Cloud Run
+
+jobs:
+  deploy-frontend:
+    name: Deploy HTML → Google Cloud Run
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Bajar el código
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      # 2. Autenticarse en Google Cloud
+      - name: Autenticar en GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      # 3. Configurar gcloud CLI
+      - name: Configurar gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      # 4. Construir y subir la imagen Docker a Google Container Registry
+      - name: Build y Push imagen Docker
+        run: |
+          cd frontend
+          gcloud builds submit \
+            --tag gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
+
+      # 5. Desplegar en Cloud Run
+      - name: Deploy a Cloud Run
+        run: |
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${{ github.sha }} \
+            --platform managed \
+            --region ${{ env.REGION }} \
+            --allow-unauthenticated \
+            --port 8080
