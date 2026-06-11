@@ -11,6 +11,6 @@ WORKDIR /app
 COPY index.html .
 COPY styles.css .
 COPY Restaurante.jpeg .
-
+COPY app.js .
 # Cloud Run le pasa el $PORT, y este comando lo lee de forma nativa e inmediata
 CMD ["sh", "-c", "http-server . -p ${PORT:-8080}"]
